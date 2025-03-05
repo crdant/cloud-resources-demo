@@ -9,7 +9,7 @@ provider:
     package: "crossplane-contrib/provider-aws"
     version: "v0.33.0"
     pullPolicy: IfNotPresent
-    imagePullSecrets: []
+    packagePullSecrets: []
 
 # AWS Configuration
 aws:

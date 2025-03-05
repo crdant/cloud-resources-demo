@@ -4,10 +4,10 @@ metadata:
   name: {{ include "cloud-resources.fullname" . }}-aws
 spec:
   package: {{ .Values.provider.aws.registry }}/{{ .Values.provider.aws.package }}:{{ .Values.provider.aws.version }}
-  {{- with .Values.provider.aws.imagePullSecrets }}
-  imagePullSecrets:
+  {{- with .Values.provider.aws.packagePullSecrets }}
+  packagePullSecrets:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- if .Values.provider.aws.pullPolicy }}
-  revisionActivationPolicy: {{ .Values.provider.aws.pullPolicy }}
+  packagePullPolicy: {{ .Values.provider.aws.pullPolicy }}
   {{- end }}
