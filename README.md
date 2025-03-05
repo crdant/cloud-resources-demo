@@ -1,7 +1,65 @@
-Replicated WASM Demo
+Cloud Resources Manager
 ====================
 
-This repository contains a simple Go application called "Hello, Replicated!"
+This Helm chart manages AWS cloud resources including S3 buckets and RDS instances using Crossplane.
+
+Prerequisites
+------------
+
+- Kubernetes cluster
+- Helm v3+
+- AWS credentials with appropriate permissions
+- Crossplane with AWS Provider installed
+
+Configuration
+------------
+
+### AWS Configuration
+
+The following AWS configurations are available:
+
+```yaml
+aws:
+  region: us-west-2  # AWS region for resources
+
+s3:
+  enabled: false     # Enable S3 bucket creation
+  bucketName: ""     # Name of the S3 bucket
+  versioning: false  # Enable versioning
+  encryption: true   # Enable encryption
+
+rds:
+  enabled: false     # Enable RDS instance creation
+  instanceName: ""   # Name of the RDS instance
+  instanceClass: ""  # RDS instance class
+  masterUsername: "" # Master username
+  allocatedStorage: 20 # Storage in GB
+  engine: "postgres" # Database engine
+  engineVersion: "" # Engine version
+```
+
+Installation
+------------
+
+1. Create a secret with AWS credentials:
+
+```bash
+kubectl create secret generic aws-creds \
+  --from-literal=credentials="[default]
+aws_access_key_id = YOUR_ACCESS_KEY
+aws_secret_access_key = YOUR_SECRET_KEY"
+```
+
+2. Install the chart:
+
+```bash
+helm install cloud-resources ./charts/cloud-resources \
+  --set aws.region=us-west-2 \
+  --set s3.enabled=true \
+  --set s3.bucketName=my-bucket
+```
+
+This repository contains cloud resource management capabilities
 that is compiled to WebAssembly using the
 p[Spin](https://developer.fermyon.com/spin/v2/index) framework. It's
 deliberately simple and used to show how an application using a custom runtime
