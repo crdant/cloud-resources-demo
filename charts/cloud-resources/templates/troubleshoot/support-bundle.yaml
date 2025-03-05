@@ -1,0 +1,18 @@
+{{- define "troubleshoot.supportBundle" -}}
+apiVersion: troubleshoot.sh/v1beta2
+kind: SupportBundle
+metadata:
+  name: {{ include "cloud-resources.name" . }}-support-bundle
+spec:
+  collectors: {{- include "troubleshoot.collectors.shared" .  | nindent 4 }}
+    - logs:
+        name: app/{{ include "cloud-resources.name" . }}/logs
+        selector: 
+          {{- $labels := (include "cloud-resources.selectorLabels" . | fromYaml ) }}
+          {{- range ( $labels | keys ) }}
+          - {{ print . "=" (get $labels .) }}
+          {{- end }}
+        limits:
+          maxAge: 720h
+  analyzers: {{- include "troubleshoot.analyzers.shared" .  | nindent 4 }}
+{{- end -}}
