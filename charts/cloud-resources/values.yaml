@@ -2,6 +2,15 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# AWS Provider Configuration
+provider:
+  aws:
+    registry: "xpkg.upbound.io"
+    package: "crossplane-contrib/provider-aws"
+    version: "v0.33.0"
+    pullPolicy: IfNotPresent
+    imagePullSecrets: []
+
 # AWS Configuration
 aws:
   region: us-west-2

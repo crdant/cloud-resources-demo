@@ -1,0 +1,13 @@
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: {{ include "cloud-resources.fullname" . }}-aws
+spec:
+  package: {{ .Values.provider.aws.registry }}/{{ .Values.provider.aws.package }}:{{ .Values.provider.aws.version }}
+  {{- with .Values.provider.aws.imagePullSecrets }}
+  imagePullSecrets:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- if .Values.provider.aws.pullPolicy }}
+  revisionActivationPolicy: {{ .Values.provider.aws.pullPolicy }}
+  {{- end }}
