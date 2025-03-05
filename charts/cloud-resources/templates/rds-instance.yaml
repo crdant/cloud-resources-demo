@@ -1,5 +1,5 @@
 {{- if .Values.rds.enabled }}
-apiVersion: database.aws.crossplane.io/v1beta1
+apiVersion: rds.aws.upbound.io/v1beta1
 kind: RDSInstance
 metadata:
   name: {{ .Values.rds.instanceName }}
