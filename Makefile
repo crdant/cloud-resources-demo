@@ -6,7 +6,7 @@ CHARTS      := $(shell find $(CHARTDIR) -mindepth 1 -maxdepth 1 -type d -exec ba
 MANIFESTDIR := $(PROJECTDIR)/kots
 MANIFESTS   := $(shell find $(MANIFESTDIR) -name '*.yaml' -o -name '*.yml')
 
-VERSION     := $(shell yq .version $(CHARTDIR)/cloud-resources/Chart.yaml)
+VERSION     ?= $(shell yq .version $(CHARTDIR)/cloud-resources/Chart.yaml)
 CHANNEL     := $(shell git branch --show-current)
 ifeq ($(CHANNEL), main)
 	CHANNEL=Unstable
