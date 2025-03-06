@@ -6,31 +6,79 @@ metadata:
 spec:
   groups:
     - name: cloud-resources
-      title: Application Core
+      title: Cloud Provider
       description: |
-        For this section, you can specify some core parameters for how
-        Hello Replicated operates, including the domain where users will access it
-        and the user who can administer it.
       items:
-        - name: replicas
-          title: Instances
+        - name: cloud
+          title: Cloud
           help_text: >
-            The number of instances of the application to run
-            the `https://` or any path elements.
-          type: text
+            Select the cloud provider to use
+          type: radio
           required: true
-          validation:
-            regex: 
-              pattern: ^\d+$
-              message: Please enter a number of instancess
-        - name: domain
-          title: Hostname
+          default: aws
+          items
+            - name: aws
+              title: aws
+        - name: aws_region
+          title: AWS Region
           help_text: >
-            The domain name at which you'll access Hello Replicated. Don't include
-            the `https://` or any path elements.
-          type: text
+            Select the AWS region to use
+          type: select_one
           required: true
-          validation:
-            regex: 
-              pattern: ^(([a-zA-Z]{1})|([a-zA-Z]{1}[a-zA-Z]{1})|([a-zA-Z]{1}[0-9]{1})|([0-9]{1}[a-zA-Z]{1})|([a-zA-Z0-9][a-zA-Z0-9-_]{1,61}[a-zA-Z0-9]))\.([a-zA-Z]{2,6}|[a-zA-Z0-9-]{2,30}\.[a-zA-Z]{2,3})$
-              message: Please enter a valid hostname
+          default: us-east-1
+          items:
+            - name: us-east-1
+              title: US East (N. Virginia)
+            - name: us-east-2
+              title: US East (Ohio)
+            - name: us-west-1
+              title: US West (N. California)
+            - name: us-west-2
+              title: US West (Oregon)
+            - name: af-south-1
+              title: Africa (Cape Town)
+            - name: ap-east-1
+              title: Asia Pacific (Hong Kong)
+            - name: ap-south-1
+              title: Asia Pacific (Mumbai)
+            - name: ap-northeast-3
+              title: Asia Pacific (Osaka)
+            - name: ap-northeast-2
+              title: Asia Pacific (Seoul)
+            - name: ap-southeast-1
+              title: Asia Pacific (Singapore)
+            - name: ap-southeast-2
+              title: Asia Pacific (Sydney)
+            - name: ap-northeast-1
+              title: Asia Pacific (Tokyo)
+            - name: ca-central-1
+              title: Canada (Central)
+            - name: eu-central-1
+              title: Europe (Frankfurt)
+            - name: eu-west-1
+              title: Europe (Ireland)
+            - name: eu-west-2
+              title: Europe (London)
+            - name: eu-south-1
+              title: Europe (Milan)
+            - name: eu-west-3
+              title: Europe (Paris)
+            - name: eu-north-1
+              title: Europe (Stockholm)
+            - name: me-south-1
+              title: Middle East (Bahrain)
+            - name: sa-east-1
+              title: South America (São Paulo)
+        - name: aws_access_key_id
+          title: AWS Access Key ID
+          type: password
+          help_text: >
+            The AWS access key ID to use for authentication
+          required: true
+        - name: aws_secret_access_key
+          title: AWS Secret Access Key
+          type: password
+          help_text: >
+            The AWS secret access key to use for authentication
+          required: true
+
