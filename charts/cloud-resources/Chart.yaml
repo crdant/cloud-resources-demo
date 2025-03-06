@@ -8,6 +8,9 @@ dependencies:
 - name: replicated
   repository: oci://registry.replicated.com/library
   version: 1.1.1
+- name: cloud-providers
+  version: 0.1.0
+  repository: file://../cloud-providers
 annotations:
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/prerelease: "false"
