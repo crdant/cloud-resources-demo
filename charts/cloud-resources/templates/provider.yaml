@@ -1,7 +1,19 @@
+apiVersion: pkg.crossplane.io/v1alpha1
+kind: ControllerConfig
+metadata:
+  name: {{ include "cloud-resources.fullname" . }}-aws-config
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "-5"
+spec: {}
+---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: {{ include "cloud-resources.fullname" . }}-aws
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "-4"
 spec:
   package: {{ .Values.provider.aws.registry }}/{{ .Values.provider.aws.package }}:{{ .Values.provider.aws.version }}
   {{- with .Values.provider.aws.packagePullSecrets }}
@@ -11,3 +23,5 @@ spec:
   {{- if .Values.provider.aws.pullPolicy }}
   packagePullPolicy: {{ .Values.provider.aws.pullPolicy }}
   {{- end }}
+  controllerConfigRef:
+    name: {{ include "cloud-resources.fullname" . }}-aws-config
