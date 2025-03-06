@@ -20,3 +20,4 @@ spec:
       - name: crossplane
         chartname: crossplane-stable/crossplane
         namespace: crossplane-system
+        version: 1.19.0
