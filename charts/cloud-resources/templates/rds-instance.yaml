@@ -1,6 +1,6 @@
 {{- if .Values.rds.enabled }}
-apiVersion: rds.aws.upbound.io/v1beta1
-kind: RDSInstance
+apiVersion: rds.aws.crossplane.io/v1beta1
+kind: DBInstance
 metadata:
   name: {{ .Values.rds.instanceName }}
 spec:
