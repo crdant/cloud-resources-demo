@@ -6,7 +6,6 @@ metadata:
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
-    acl: private
     locationConstraint: {{ .Values.aws.region }}
     {{- if .Values.s3.versioning }}
     versioning: true
