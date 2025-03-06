@@ -1,5 +1,5 @@
-apiVersion: pkg.crossplane.io/v1alpha1
-kind: ControllerConfig
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
 metadata:
   name: {{ include "cloud-resources.fullname" . }}-aws-config
   annotations:
@@ -23,5 +23,5 @@ spec:
   {{- if .Values.provider.aws.pullPolicy }}
   packagePullPolicy: {{ .Values.provider.aws.pullPolicy }}
   {{- end }}
-  controllerConfigRef:
+  runtimeConfigRef:
     name: {{ include "cloud-resources.fullname" . }}-aws-config
