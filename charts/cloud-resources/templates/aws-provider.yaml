@@ -1,5 +1,5 @@
 {{- if (lookup "pkg.crossplane.io/v1" "Provider" "" (include "cloud-resources.fullname" . | printf "%s-aws")) }}
-apiVersion: aws.crossplan.io/v1beta1
+apiVersion: aws.crossplane.io/v1beta1
 kind: ProviderConfig
 metadata:
   name: {{ include "cloud-resources.fullname" . }}-aws-provider
