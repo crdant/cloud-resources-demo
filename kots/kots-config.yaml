@@ -16,14 +16,14 @@ spec:
           type: radio
           required: true
           default: aws
-          items
+          items:
             - name: aws
-              title: aws
+              title: AWS
         - name: aws_region
           title: AWS Region
           help_text: >
             Select the AWS region to use
-          type: select_one
+          type: dropdown
           required: true
           default: us-east-1
           items:
