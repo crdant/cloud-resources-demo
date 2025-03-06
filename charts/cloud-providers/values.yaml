@@ -12,3 +12,4 @@ providers:
   version: "v0.32.0"
   pullPolicy: IfNotPresent
   packagePullSecrets: []
+  serviceAccountName: ""
