@@ -13,6 +13,7 @@ provider:
     version: "v0.33.0"
     pullPolicy: IfNotPresent
     packagePullSecrets: []
+    credentials: ""  # AWS credentials in standard AWS credentials file format
 
 # AWS Configuration
 aws:

@@ -41,6 +41,10 @@
                 "type": "string"
               },
               "description": "Optional package pull secrets for private registries"
+            },
+            "credentials": {
+              "type": "string",
+              "description": "AWS credentials in standard AWS credentials file format"
             }
           }
         }
