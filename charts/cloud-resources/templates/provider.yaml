@@ -25,3 +25,5 @@ spec:
   {{- end }}
   runtimeConfigRef:
     name: {{ include "cloud-resources.fullname" . }}-aws-config
+  skipDependencyResolution: false
+  revisionActivationPolicy: Automatic
