@@ -56,6 +56,10 @@
           "type": "boolean",
           "default": true,
           "description": "Enable encryption"
+        },
+        "policy": {
+          "type": "string",
+          "description": "Custom S3 bucket policy in JSON format"
         }
       }
     },

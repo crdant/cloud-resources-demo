@@ -20,6 +20,7 @@ s3:
   bucketName: "my-example-bucket"
   versioning: false
   encryption: true
+  policy: ""
 
 # RDS Configuration
 rds:
