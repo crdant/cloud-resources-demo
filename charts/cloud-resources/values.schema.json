@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "nameOverride": {
+      "type": "string",
+      "description": "Override the name of the chart"
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "description": "Override the full name of the chart"
+    },
+    "provider": {
+      "type": "object",
+      "properties": {
+        "aws": {
+          "type": "object",
+          "required": ["registry", "package", "version"],
+          "properties": {
+            "registry": {
+              "type": "string",
+              "description": "Provider package registry"
+            },
+            "package": {
+              "type": "string",
+              "description": "Provider package name"
+            },
+            "version": {
+              "type": "string",
+              "description": "Provider version"
+            },
+            "pullPolicy": {
+              "type": "string",
+              "enum": ["IfNotPresent", "Always", "Never"],
+              "default": "IfNotPresent",
+              "description": "Package pull policy for provider"
+            },
+            "packagePullSecrets": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Optional package pull secrets for private registries"
+            }
+          }
+        }
+      }
+    },
+    "aws": {
+      "type": "object",
+      "required": ["region"],
+      "properties": {
+        "region": {
+          "type": "string",
+          "description": "AWS region for resources"
+        }
+      }
+    },
+    "s3": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable S3 bucket creation"
+        },
+        "bucketName": {
+          "type": "string",
+          "description": "Name of the S3 bucket"
+        },
+        "versioning": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable versioning"
+        },
+        "encryption": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable encryption"
+        }
+      }
+    },
+    "rds": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable RDS instance creation"
+        },
+        "instanceName": {
+          "type": "string",
+          "description": "Name of the RDS instance"
+        },
+        "instanceClass": {
+          "type": "string",
+          "description": "RDS instance class"
+        },
+        "masterUsername": {
+          "type": "string",
+          "description": "Master username"
+        },
+        "allocatedStorage": {
+          "type": "integer",
+          "minimum": 20,
+          "default": 20,
+          "description": "Storage in GB"
+        },
+        "engine": {
+          "type": "string",
+          "enum": ["postgres", "mysql", "mariadb"],
+          "default": "postgres",
+          "description": "Database engine"
+        },
+        "engineVersion": {
+          "type": "string",
+          "description": "Engine version"
+        },
+        "skipFinalSnapshot": {
+          "type": "boolean",
+          "default": true,
+          "description": "Skip final snapshot when deleting the instance"
+        },
+        "publiclyAccessible": {
+          "type": "boolean",
+          "default": false,
+          "description": "Make the instance publicly accessible"
+        }
+      }
+    },
+    "serviceAccount": {
+      "type": "object",
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "default": true,
+          "description": "Specifies whether a service account should be created"
+        },
+        "automount": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically mount a ServiceAccount's API credentials"
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Annotations to add to the service account"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the service account to use"
+        }
+      }
+    }
+  }
+}
