@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "nameOverride": {
+      "type": "string",
+      "description": "Override the name of the chart"
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "description": "Override the full name of the chart"
+    },
+    "providers": {
+      "type": "object",
+      "required": ["registry", "package", "version"],
+      "properties": {
+        "registry": {
+          "type": "string",
+          "description": "Provider package registry"
+        },
+        "package": {
+          "type": "string",
+          "description": "Provider package name"
+        },
+        "version": {
+          "type": "string",
+          "description": "Provider version"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "enum": ["IfNotPresent", "Always", "Never"],
+          "default": "IfNotPresent",
+          "description": "Package pull policy for provider"
+        },
+        "packagePullSecrets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Optional package pull secrets for private registries"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+# Default values for cloud-providers
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+nameOverride: ""
+fullnameOverride: ""
+
+# AWS Provider Configuration
+providers:
+  registry: "index.docker.io"
+  package: "crossplane/provider-aws"
+  version: "v0.33.0"
+  pullPolicy: IfNotPresent
+  packagePullSecrets: []

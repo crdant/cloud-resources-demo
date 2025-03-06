@@ -15,33 +15,8 @@
       "properties": {
         "aws": {
           "type": "object",
-          "required": ["registry", "package", "version"],
+          "required": ["credentials"],
           "properties": {
-            "registry": {
-              "type": "string",
-              "description": "Provider package registry"
-            },
-            "package": {
-              "type": "string",
-              "description": "Provider package name"
-            },
-            "version": {
-              "type": "string",
-              "description": "Provider version"
-            },
-            "pullPolicy": {
-              "type": "string",
-              "enum": ["IfNotPresent", "Always", "Never"],
-              "default": "IfNotPresent",
-              "description": "Package pull policy for provider"
-            },
-            "packagePullSecrets": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Optional package pull secrets for private registries"
-            },
             "credentials": {
               "type": "string",
               "description": "AWS credentials in standard AWS credentials file format"
