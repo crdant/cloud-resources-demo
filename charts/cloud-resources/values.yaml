@@ -2,6 +2,29 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# AWS Configuration
+aws:
+  region: us-west-2
+
+# S3 Configuration
+s3:
+  enabled: false
+  bucketName: "my-example-bucket"
+  versioning: false
+  encryption: true
+
+# RDS Configuration
+rds:
+  enabled: false
+  instanceName: "my-database"
+  instanceClass: "db.t3.micro"
+  masterUsername: "admin"
+  allocatedStorage: 20
+  engine: "postgres"
+  engineVersion: "13.7"
+  skipFinalSnapshot: true
+  publiclyAccessible: false
+
 replicaCount: 1
 
 image:
