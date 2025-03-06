@@ -8,8 +8,8 @@ fullnameOverride: ""
 # AWS Provider Configuration
 provider:
   aws:
-    registry: "xpkg.upbound.io"
-    package: "crossplane-contrib/provider-aws"
+    registry: "xpkg.crossplane.io"
+    package: "provider-aws"
     version: "v0.33.0"
     pullPolicy: IfNotPresent
     packagePullSecrets: []

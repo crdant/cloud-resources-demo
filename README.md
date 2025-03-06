@@ -21,8 +21,8 @@ The AWS Provider can be configured with the following options:
 ```yaml
 provider:
   aws:
-    registry: "xpkg.upbound.io"           # Provider package registry
-    package: "crossplane-contrib/provider-aws"  # Provider package name
+    registry: "xpkg.crossplane.io"        # Provider package registry
+    package: "provider-aws"               # Provider package name
     version: "v0.33.0"                    # Provider version
     pullPolicy: IfNotPresent              # Package pull policy for provider
     packagePullSecrets: []                # Optional package pull secrets for private registries
