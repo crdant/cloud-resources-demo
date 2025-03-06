@@ -9,6 +9,6 @@ fullnameOverride: ""
 providers:
   registry: "index.docker.io"
   package: "crossplane/provider-aws"
-  version: "v0.33.0"
+  version: "v0.32.0"
   pullPolicy: IfNotPresent
   packagePullSecrets: []

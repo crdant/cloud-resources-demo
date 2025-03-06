@@ -15,13 +15,13 @@ metadata:
     helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-weight: "-4"
 spec:
-  package: {{ .Values.provider.aws.registry }}/{{ .Values.provider.aws.package }}:{{ .Values.provider.aws.version }}
-  {{- with .Values.provider.aws.packagePullSecrets }}
+  package: {{ .Values.providers.registry }}/{{ .Values.providers.package }}:{{ .Values.providers.version }}
+  {{- with .Values.providers.packagePullSecrets }}
   packagePullSecrets:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- if .Values.provider.aws.pullPolicy }}
-  packagePullPolicy: {{ .Values.provider.aws.pullPolicy }}
+  {{- if .Values.providers.pullPolicy }}
+  packagePullPolicy: {{ .Values.providers.pullPolicy }}
   {{- end }}
   runtimeConfigRef:
     name: {{ include "cloud-providers.fullname" . }}-aws-config
