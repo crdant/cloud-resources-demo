@@ -6,7 +6,7 @@ spec:
   # chart identifies a matching chart from a .tgz
   chart:
     name: cloud-resources
-    chartVersion: 0.1.0-build.0
+    chartVersion: 0.1.0
 
   # values are used in the customer environment, as a pre-render step
   # these values will be supplied to helm template
