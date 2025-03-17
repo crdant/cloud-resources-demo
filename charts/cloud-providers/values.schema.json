@@ -24,9 +24,8 @@
           "description": "Provider package registry"
         },
         "pullPolicy": {
-          "type": "string",
-          "enum": ["IfNotPresent", "Always", "Never"],
-          "default": "IfNotPresent",
+          "type": ["string", "null"],
+          "enum": ["IfNotPresent", "Always", "Never", ""],
           "description": "Package pull policy for provider"
         },
         "packagePullSecrets": {
