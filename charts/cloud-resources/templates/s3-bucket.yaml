@@ -5,7 +5,7 @@ metadata:
   name: {{ .Values.s3.bucketName }}
 spec:
   forProvider:
-    locationConstraint: {{ .Values.aws.region }}
+    region: {{ .Values.aws.region }}
     {{- if .Values.s3.versioning }}
     versioning: true
     {{- end }}
