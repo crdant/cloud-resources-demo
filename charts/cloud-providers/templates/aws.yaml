@@ -12,7 +12,7 @@ spec:
   packagePullSecrets:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- if .Values.providers.pullPolicy }}
+  {{- if and .Values.providers.pullPolicy (ne .Values.providers.pullPolicy "") }}
   packagePullPolicy: {{ .Values.providers.pullPolicy }}
   {{- end }}
 ---
@@ -29,6 +29,6 @@ spec:
   packagePullSecrets:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- if .Values.providers.pullPolicy }}
+  {{- if and .Values.providers.pullPolicy (ne .Values.providers.pullPolicy "") }}
   packagePullPolicy: {{ .Values.providers.pullPolicy }}
   {{- end }}
