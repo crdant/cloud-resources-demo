@@ -21,4 +21,5 @@ spec:
     {{- end }}
   providerConfigRef:
     name: {{ .Release.Name }}-aws-provider
+    apiVersion: aws.upbound.io/v1beta1
 {{- end }}
