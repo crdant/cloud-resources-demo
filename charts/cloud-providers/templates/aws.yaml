@@ -4,7 +4,7 @@ metadata:
   name: {{ include "cloud-providers.fullname" . }}-aws-config
   annotations:
     helm.sh/hook: pre-install,pre-upgrade
-    helm.sh/hook-weight: "-5"
+    helm.sh/hook-weight: "-20"
 spec: {}
 ---
 apiVersion: pkg.crossplane.io/v1
@@ -13,9 +13,9 @@ metadata:
   name: {{ include "cloud-providers.fullname" . }}-aws
   annotations:
     helm.sh/hook: pre-install,pre-upgrade
-    helm.sh/hook-weight: "-4"
+    helm.sh/hook-weight: "-10"
 spec:
-  package: {{ .Values.providers.registry }}/{{ .Values.providers.package }}:{{ .Values.providers.version }}
+  package: {{ .Values.providers.aws.registry }}/{{ .Values.providers.aws.s3.package }}:{{ .Values.providers.aws.version }}
   {{- with .Values.providers.packagePullSecrets }}
   packagePullSecrets:
     {{- toYaml . | nindent 4 }}
@@ -25,28 +25,3 @@ spec:
   {{- end }}
   runtimeConfigRef:
     name: {{ include "cloud-providers.fullname" . }}-aws-config
----
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: {{ include "cloud-providers.fullname" . }}-wait-for-provider-aws
-  annotations:
-    helm.sh/hook: post-install,post-upgrade
-    helm.sh/hook-weight: "5"
-    helm.sh/hook-delete-policy: hook-succeeded,before-hook-creation
-spec:
-  template:
-    spec:
-      {{- if .Values.providers.serviceAccountName }}
-      serviceAccountName: {{ .Values.providers.serviceAccountName }}
-      {{- end }}
-      containers:
-      - name: kubectl
-        image: bitnami/kubectl:latest
-        command:
-        - kubectl
-        - wait
-        - --for=condition=Healthy
-        - --timeout=5m
-        - provider.pkg.crossplane.io/{{ include "cloud-providers.fullname" . }}-aws
-      restartPolicy: OnFailure
