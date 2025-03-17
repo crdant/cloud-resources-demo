@@ -10,5 +10,5 @@ spec:
     source: Secret
     secretRef:
       namespace: {{ .Release.Namespace }}
-      name: aws-creds
+      name: {{ include "cloud-resources.fullname" . }}-aws-creds
       key: credentials
