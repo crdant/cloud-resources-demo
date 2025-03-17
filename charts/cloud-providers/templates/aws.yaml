@@ -15,7 +15,7 @@ metadata:
     helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-weight: "-10"
 spec:
-  package: {{ .Values.providers.registry }}/{{ .Values.providers.aws.s3.package }}:{{ .Values.providers.aws.version }}
+  package: {{ .Values.providers.registry }}/{{ .Values.providers.aws.packages.s3 }}:{{ .Values.providers.aws.version }}
   {{- with .Values.providers.packagePullSecrets }}
   packagePullSecrets:
     {{- toYaml . | nindent 4 }}
@@ -43,7 +43,7 @@ metadata:
     helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-weight: "-10"
 spec:
-  package: {{ .Values.providers.registry }}/{{ .Values.providers.aws.rds.package }}:{{ .Values.providers.aws.version }}
+  package: {{ .Values.providers.registry }}/{{ .Values.providers.aws.packages.rds }}:{{ .Values.providers.aws.version }}
   {{- with .Values.providers.packagePullSecrets }}
   packagePullSecrets:
     {{- toYaml . | nindent 4 }}

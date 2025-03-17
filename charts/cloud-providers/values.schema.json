@@ -38,27 +38,21 @@
         },
         "aws": {
           "type": "object",
-          "required": ["version"],
+          "required": ["version", "packages"],
           "properties": {
             "version": {
               "type": "string",
               "description": "AWS provider version"
             },
-            "s3": {
+            "packages": {
               "type": "object",
-              "required": ["package"],
+              "required": ["s3", "rds"],
               "properties": {
-                "package": {
+                "s3": {
                   "type": "string",
                   "description": "AWS S3 provider package name"
-                }
-              }
-            },
-            "rds": {
-              "type": "object",
-              "required": ["package"],
-              "properties": {
-                "package": {
+                },
+                "rds": {
                   "type": "string",
                   "description": "AWS RDS provider package name"
                 }
