@@ -1,5 +1,5 @@
 {{- if .Values.rds.enabled }}
-apiVersion: rds.aws.crossplane.io/v1beta1
+apiVersion: rds.aws.crossplane.io/v1alpha1
 kind: DBInstance
 metadata:
   name: {{ .Values.rds.instanceName }}
@@ -8,11 +8,24 @@ spec:
     region: {{ .Values.aws.region }}
     dbInstanceClass: {{ .Values.rds.instanceClass }}
     masterUsername: {{ .Values.rds.masterUsername }}
+    masterUserPasswordSecretRef:
+      key: password
+      name: {{ .Values.rds.instanceName }}-master-password
+      namespace: {{ .Release.Namespace }}
     allocatedStorage: {{ .Values.rds.allocatedStorage }}
     engine: {{ .Values.rds.engine }}
-    engineVersion: {{ .Values.rds.engineVersion }}
+    engineVersion: "{{ .Values.rds.engineVersion }}"
     skipFinalSnapshotBeforeDeletion: {{ .Values.rds.skipFinalSnapshot }}
     publiclyAccessible: {{ .Values.rds.publiclyAccessible }}
   providerConfigRef:
     name: {{ .Release.Name }}-aws-provider
 {{- end }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.rds.instanceName }}-master-password
+  namespace: {{ .Release.Namespace }}
+type: Opaque
+data:
+  password: {{ .Values.rds.masterUserPassword | b64enc }}

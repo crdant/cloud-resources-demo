@@ -5,7 +5,6 @@ metadata:
   name: {{ .Values.s3.bucketName }}
 spec:
   forProvider:
-    region: {{ .Values.aws.region }}
     locationConstraint: {{ .Values.aws.region }}
     {{- if .Values.s3.versioning }}
     versioning: true
@@ -16,36 +15,9 @@ spec:
         - applyServerSideEncryptionByDefault:
             sseAlgorithm: AES256
     {{- end }}
-    publicAccessBlockConfiguration:
-      blockPublicAcls: true
-      blockPublicPolicy: true
-      ignorePublicAcls: true
-      restrictPublicBuckets: true
     {{- if .Values.s3.policy }}
     policy: |
       {{- tpl .Values.s3.policy . | nindent 6 }}
-    {{- else }}
-    policy: |
-      {
-        "Version": "2012-10-17",
-        "Statement": [
-          {
-            "Sid": "EnforcedTLS",
-            "Effect": "Deny",
-            "Principal": "*",
-            "Action": "s3:*",
-            "Resource": [
-              "arn:aws:s3:::{{ .Values.s3.bucketName }}",
-              "arn:aws:s3:::{{ .Values.s3.bucketName }}/*"
-            ],
-            "Condition": {
-              "Bool": {
-                "aws:SecureTransport": "false"
-              }
-            }
-          }
-        ]
-      }
     {{- end }}
   providerConfigRef:
     name: {{ .Release.Name }}-aws-provider
