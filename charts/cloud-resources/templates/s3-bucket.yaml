@@ -1,5 +1,5 @@
 {{- if .Values.s3.enabled }}
-apiVersion: s3.aws.crossplane.io/v1beta1
+apiVersion: s3.aws.crossplane.io/v1beta2
 kind: Bucket
 metadata:
   name: {{ .Values.s3.bucketName }}
