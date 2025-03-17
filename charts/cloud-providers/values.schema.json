@@ -12,7 +12,7 @@
     },
     "providers": {
       "type": "object",
-      "required": ["registry", "package", "version"],
+      "required": ["registry"],
       "properties": {
         "serviceAccountName": {
           "type": "string",
@@ -22,14 +22,6 @@
         "registry": {
           "type": "string",
           "description": "Provider package registry"
-        },
-        "package": {
-          "type": "string",
-          "description": "Provider package name"
-        },
-        "version": {
-          "type": "string",
-          "description": "Provider version"
         },
         "pullPolicy": {
           "type": "string",
@@ -43,6 +35,36 @@
             "type": "string"
           },
           "description": "Optional package pull secrets for private registries"
+        },
+        "aws": {
+          "type": "object",
+          "required": ["version"],
+          "properties": {
+            "version": {
+              "type": "string",
+              "description": "AWS provider version"
+            },
+            "s3": {
+              "type": "object",
+              "required": ["package"],
+              "properties": {
+                "package": {
+                  "type": "string",
+                  "description": "AWS S3 provider package name"
+                }
+              }
+            },
+            "rds": {
+              "type": "object",
+              "required": ["package"],
+              "properties": {
+                "package": {
+                  "type": "string",
+                  "description": "AWS RDS provider package name"
+                }
+              }
+            }
+          }
         }
       }
     }
