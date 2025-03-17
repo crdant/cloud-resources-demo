@@ -10,7 +10,7 @@ spec:
   template:
     spec:
       restartPolicy: Never
-      serviceAccountName: {{ .Values.providers.serviceAccountName }}
+      serviceAccountName: {{ .Values.providers.aws.waitJob.serviceAccountName | default .Values.providers.serviceAccountName }}
       containers:
         - name: {{ include "cloud-providers.fullname" . }}-wait-for-provider-aws
           image: bitnami/kubectl:latest

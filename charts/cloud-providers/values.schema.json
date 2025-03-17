@@ -57,6 +57,16 @@
                   "description": "AWS RDS provider package name"
                 }
               }
+            },
+            "waitJob": {
+              "type": "object",
+              "properties": {
+                "serviceAccountName": {
+                  "type": "string",
+                  "description": "Service account to use specifically for the AWS provider wait job",
+                  "default": ""
+                }
+              }
             }
           }
         }
