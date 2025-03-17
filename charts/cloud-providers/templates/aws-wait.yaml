@@ -1,0 +1,56 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "cloud-providers.fullname" . }}-wait-for-provider-aws
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-succeeded
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      serviceAccountName: {{ .Values.aws.waitJob.serviceAccountName }}
+      containers:
+        - name: {{ include "cloud-providers.fullname" . }}-wait-for-provider-aws
+          image: bitnami/kubectl:latest
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Waiting for provider 'cloud-providers-aws' to be Healthy..."
+              attempt=0
+              delay=5
+              max_delay=60
+              max_attempts=10
+              
+              while [ $attempt -lt $max_attempts ]; do
+                status=$(kubectl get providers.pkg.crossplane.io cloud-providers-aws -o=jsonpath='{.status.conditions[?(@.type=="Healthy")].status}')
+                echo "❓ Provider 'cloud-providers-aws' is $status"
+                
+                if [ "$status" = "True" ]; then
+                  echo "✅ Provider 'cloud-providers-aws' is Healthy"
+                  kubectl wait --for=condition=Estabslished crds/providerconfigs.aws.crossplane.io
+                  echo "✅ ProviderConfig is Established"
+                  kubectl wait --for=condition=Estabslished crds/buckets.s3.aws.crossplane.io
+                  echo "✅ Bucket is Established"
+                  kubectl wait --for=condition=Estabslished crds/dbinstances.rds.aws.crossplane.io
+                  echo "✅ DBInstance is Established"
+                  echo "✅ All required CRDs are Established"
+                  exit 0
+                fi
+                
+                attempt=$((attempt+1))
+                echo "⏳ Attempt $attempt: Provider is not Healthy yet. Retrying in $delay seconds..."
+                
+                sleep $delay
+                
+                # Exponential backoff: Double the delay, but cap at max_delay
+                delay=$((delay * 2))
+                if [ $delay -gt $max_delay ]; then
+                  delay=$max_delay
+                fi
+              done
+              
+              echo "❌ Provider 'cloud-providers-aws' did not reach Healthy state after $max_attempts attempts."
+              exit 1
