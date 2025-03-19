@@ -1,0 +1,37 @@
+{{- if .Release.IsInstall -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "cloud-providers.fullname" . }}-wait-for-providers
+  labels: {{ include "cloud-providers.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "5"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: 10
+  template:
+    metadata:
+      labels: {{ include "cloud-providers.labels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ .Values.providers.serviceAccountName | default (include "cloud-providers.fullname" .) }}
+      restartPolicy: OnFailure
+      containers:
+      - name: kubectl
+        image: bitnami/kubectl:latest
+        command:
+        - /bin/bash
+        - -c
+        - |
+          echo "Waiting for AWS S3 provider to be ready..."
+          until kubectl get provider {{ include "cloud-providers.fullname" . }}-aws-s3 -o jsonpath='{.status.conditions[?(@.type=="Healthy")].status}' | grep -q "True"; do
+            sleep 5
+          done
+          
+          echo "Waiting for AWS RDS provider to be ready..."
+          until kubectl get provider {{ include "cloud-providers.fullname" . }}-aws-rds -o jsonpath='{.status.conditions[?(@.type=="Healthy")].status}' | grep -q "True"; do
+            sleep 5
+          done
+          
+          echo "All providers are ready!"
+{{- end }}
