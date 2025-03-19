@@ -1,139 +1,83 @@
-Cloud Resources Manager
-====================
+# Cloud Resources Demo with Crossplane
 
-This Helm chart manages AWS cloud resources including S3 buckets and RDS instances using Crossplane.
+This repository demonstrates how to manage AWS cloud resources like S3 buckets and RDS instances using Crossplane deployed through the Replicated platform.
 
-Prerequisites
-------------
+## Overview
 
-- Kubernetes cluster
-- Helm v3+
-- AWS credentials with appropriate permissions
-- Crossplane with AWS Provider installed
+This application enables you to:
 
-Configuration
-------------
+1. Install Crossplane with AWS provider configurations
+2. Deploy and manage AWS resources including S3 buckets and RDS databases
+3. Package everything as a Replicated app for easy distribution to customers
 
-### Provider Configuration
+## Architecture
 
-The AWS Provider can be configured with the following options:
+The application consists of two main Helm charts:
 
-```yaml
-provider:
-  aws:
-    registry: "xpkg.crossplane.io"        # Provider package registry
-    package: "provider-aws"               # Provider package name
-    version: "v0.33.0"                    # Provider version
-    pullPolicy: IfNotPresent              # Package pull policy for provider
-    packagePullSecrets: []                # Optional package pull secrets for private registries
+### 1. cloud-providers
+This chart installs and configures AWS Crossplane providers:
+- AWS S3 provider for object storage
+- AWS RDS provider for managed databases
+- Appropriate provider configurations with AWS credentials
 
-### AWS Configuration
+### 2. cloud-resources
+This chart creates and manages actual AWS resources:
+- S3 buckets with configurable versioning and encryption
+- RDS database instances with configurable parameters
+- Custom resource definitions for object storage
 
-The following AWS configurations are available:
+## Prerequisites
 
-```yaml
-aws:
-  region: us-west-2  # AWS region for resources
+- Kubernetes cluster 1.26+
+- Replicated KOTS or Embedded Cluster for installation
+- AWS account with appropriate permissions
 
-s3:
-  enabled: false     # Enable S3 bucket creation
-  bucketName: ""     # Name of the S3 bucket
-  versioning: false  # Enable versioning
-  encryption: true   # Enable encryption
+## Installation Options
 
-rds:
-  enabled: false     # Enable RDS instance creation
-  instanceName: ""   # Name of the RDS instance
-  instanceClass: ""  # RDS instance class
-  masterUsername: "" # Master username
-  allocatedStorage: 20 # Storage in GB
-  engine: "postgres" # Database engine
-  engineVersion: "" # Engine version
-```
+The application can be installed via:
 
-Installation
-------------
+1. **Replicated KOTS**: Using the Replicated admin console 
+2. **Embedded Cluster**: Using Replicated's lightweight Kubernetes distribution
+3. **Existing Cluster**: Deploy to an existing Kubernetes cluster
 
-1. Create a secret with AWS credentials:
+## Configuration
+
+During installation, you'll need to provide:
+
+- AWS Access Key ID and Secret Access Key
+- AWS Region
+- Optional S3 bucket and RDS instance configurations
+
+The application will create resources with names based on your license information and configuration.
+
+## Troubleshooting
+
+The application includes built-in troubleshooting capabilities:
+
+- Preflight checks to validate prerequisites
+- Support bundle collection for easy diagnostics
+- Runtime status monitoring for AWS resources
+
+## Development
+
+To modify or extend this application:
+
+1. Clone this repository
+2. Modify the Helm charts in the `charts/` directory
+3. Update the Replicated manifests in the `replicated/` directory
+4. Use the provided Makefile to build and release your changes
 
 ```bash
-kubectl create secret generic aws-creds \
-  --from-literal=credentials="[default]
-aws_access_key_id = YOUR_ACCESS_KEY
-aws_secret_access_key = YOUR_SECRET_KEY"
+# Build and package the Helm charts
+make charts
+
+# Lint the release
+make lint
+
+# Create a release on the Replicated platform
+make release
 ```
 
-2. Install the chart:
+## Contributing
 
-```bash
-helm install cloud-resources ./charts/cloud-resources \
-  --set aws.region=us-west-2 \
-  --set s3.enabled=true \
-  --set s3.bucketName=my-bucket
-```
-
-This repository contains cloud resource management capabilities
-that is compiled to WebAssembly using the
-p[Spin](https://developer.fermyon.com/spin/v2/index) framework. It's
-deliberately simple and used to show how an application using a custom runtime
-can be deployed using the Replicated Embedded Cluster. 
-
-
-Using the Demo
---------------
-
-### Required Tools
-
-There are a few tools and services required to use the demonstration. If you
-use [Homebrew](https://brew.sh), you can install all of them with `brew bundle install`.
-
-* [`replicated`](https://docs.replicated.com/reference/replicated-cli-installing)
-* [`spin`](https://developer.fermyon.com/spin/v2/install)
-* [`helm`](https://helm.sh/docs/intro/install/)
-* A container registry. You can use [Docker Hub](https://hub.docker.com/) or
-  any other public registry if you don't have your onw.
-* The [Replicated Vendor Portal](https://vendor.replicated.com). You can [set up
-  a trial account](https://vendor.replicated.com/signup) if you do not already have access.
-
-### Makefile Reference
-    
-| target    | purpose |
-|-----------|---------|
-| `app`     | Creates an application for the demo on the Replicated Vendor Portal |
-| `lint`    | Run the linter against the release |
-| `build`   | Builds the WASM module from the Go source code using TinyGo |
-| `image`   | Pushes the WASM module to the registry as an OCI image |
-| `chart`   | Packages the Helm chart with updated dependencies |
-| `release` | Releases the demo application on the Vendor Portal |
-
-How it Works
-------------
-
-Though designed to showcase the Spin runtime with the Replicated Embedded
-Cluster, this demonstration uses components that allow it to be installed with
-all of the installation mechanisms the Replicated platform supports.
-
-The application is packaged in a Helm chart, and the chart uses two child
-charts. The first chart supplies the Spin runtime and requires privileged
-access to the cluster. It's a fork of [the
-chart](https://github.com/fermyon/spin-containerd-shim-installer?tab=readme-ov-file)
-provided by the Spin team to account for a naming error in the current chart.
-Its role is to install and configure the containerd shim for Spin on all worker
-nodes using a DaemonSet. It also creates the `wasmtime-spin-v2` RuntimeClass
-that the main application will use.
-
-The second child chart is the [Replicated
-SDK](https://docs.replicated.com/vendor/replicated-sdk-overview) which provides
-an in-cluster API for Replicated Platform services like upgrade checks,
-customer telemetry, and licensing. In the current implementation the
-application does not call the SDK directly and only depends on it to provide
-telemetry.
-
-To support the Replicated KOTS Admin Console and Embedded Cluster installation
-methods, we described the application with a series of YAML files that describe
-how to install the application. These files handle branding of the application,
-collecting input from the installer, and mapping the configuration the user
-provides to values for the Helm chart. An additional manifest describes the
-version of the Replicated Embedded Cluster to use for the installation and any
-customizations it requires. The current version has no customizations. You can
-see these files in the `kots` directory.
+Contributions are welcome! Please submit pull requests with any improvements or bug fixes.
