@@ -27,11 +27,11 @@ rds:
   enabled: false
   instanceName: "my-database"
   instanceClass: "db.t3.micro"
-  masterUsername: "admin"
+  masterUsername: "postgres"
+  masterUserPassword: "th1s-1s-A-REALLY-bad-1dea"
   allocatedStorage: 20
   engine: "postgres"
-  engineVersion: "13.7"
-  skipFinalSnapshot: true
+  engineVersion: "17.3"
   publiclyAccessible: false
 
 serviceAccount:

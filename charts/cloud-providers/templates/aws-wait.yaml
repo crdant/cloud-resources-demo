@@ -2,10 +2,11 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ include "cloud-providers.fullname" . }}-wait-for-provider-aws
+  labels: {{ include "cloud-providers.labels" . | nindent 4 }}
   annotations:
-    helm.sh/hook: pre-install,pre-upgrade
-    helm.sh/hook-weight: "10"
-    helm.sh/hook-delete-policy: hook-succeeded
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "5"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
 spec:
   template:
     spec:

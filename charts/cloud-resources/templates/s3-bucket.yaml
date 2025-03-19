@@ -3,6 +3,7 @@ apiVersion: s3.aws.upbound.io/v1beta2
 kind: Bucket
 metadata:
   name: {{ .Values.s3.bucketName }}
+  labels: {{ include "cloud-resources.labels" . | nindent 4 }}
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
@@ -11,9 +12,9 @@ spec:
     {{- end }}
     {{- if .Values.s3.encryption }}
     serverSideEncryptionConfiguration:
-      rules:
-        - applyServerSideEncryptionByDefault:
-            sseAlgorithm: AES256
+      rule:
+        applyServerSideEncryptionByDefault:
+          sseAlgorithm: AES256
     {{- end }}
     {{- if .Values.s3.policy }}
     policy: |
@@ -21,5 +22,19 @@ spec:
     {{- end }}
   providerConfigRef:
     name: {{ .Release.Name }}-aws-provider
-    apiVersion: aws.upbound.io/v1beta1
+---
+{{- if .Values.s3.encryption }}
+apiVersion: s3.aws.upbound.io/v1beta2
+kind: BucketServerSideEncryptionConfiguration
+metadata:
+  name: {{ .Values.s3.bucketName }}
+spec:
+  forProvider:
+    bucketSelector:
+      matchLabels: {{ include "cloud-resources.selectorLabels" . | nindent 8 }}
+    region: {{ .Values.aws.region }}
+    rule:
+      - applyServerSideEncryptionByDefault:
+          sseAlgorithm: AES256
+{{- end }}
 {{- end }}

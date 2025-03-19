@@ -3,7 +3,7 @@ appVersion: 0.1.0
 description: A Helm chart for Kubernetes
 name: cloud-providers
 type: application
-version: 0.0.0
+version: 0.0.1
 annotations:
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/prerelease: "false"

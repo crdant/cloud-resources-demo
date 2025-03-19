@@ -1,4 +1,4 @@
-{{- if .Values.rds.enabled }}
+{{- if and .Values.rds (hasKey .Values.rds "enabled") .Values.rds.enabled }}
 apiVersion: rds.aws.upbound.io/v1beta2
 kind: Instance
 metadata:
@@ -18,7 +18,7 @@ spec:
     engineVersion: "{{ .Values.rds.engineVersion }}"
     publiclyAccessible: {{ .Values.rds.publiclyAccessible }}
     skipFinalSnapshot: false
-    finalSnapshotIdentifier: $(metadata.uid)-final-snapshot
+    finalSnapshotIdentifier: {{ uuidv4 }}
   providerConfigRef:
     name: {{ .Release.Name }}-aws-provider
 {{- end }}

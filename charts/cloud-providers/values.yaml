@@ -7,9 +7,15 @@ fullnameOverride: ""
 
 # AWS Provider Configuration
 providers:
-  registry: "index.docker.io"
-  package: "crossplane/provider-aws"
-  version: "v0.32.0"
-  pullPolicy: IfNotPresent
+  registry: "xpkg.crossplane.io"
+  pullPolicy: ""
   packagePullSecrets: []
   serviceAccountName: ""
+
+  aws:
+    version: "v1.21.1"
+    packages:
+      s3: "crossplane-contrib/provider-aws-s3"
+      rds: "crossplane-contrib/provider-aws-rds"
+    waitJob:
+      serviceAccountName: ""

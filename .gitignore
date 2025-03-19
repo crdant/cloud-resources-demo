@@ -2,7 +2,7 @@
 build
 
 # Replicated
-kots/*.tgz
+replicated/*.tgz
 
 # Kubernetes
 *.kubeconfig
@@ -44,5 +44,9 @@ Thumbs.db
 *.tmp
 *.swp
 *~
+
+# secrets and work files
+secrets/*
+work/*
 
 .aider*
