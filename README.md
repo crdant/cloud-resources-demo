@@ -1,99 +1,52 @@
-# 🌟 Cloud Resources Demo 🌟
+# 🌩️ Cloud Resources Demo
 
-A Kubernetes application for provisioning and managing AWS cloud resources using Crossplane.
+A comprehensive solution for managing AWS cloud resources including S3 buckets and RDS instances through Kubernetes using Crossplane.
 
 ## 📋 Summary
 
-This project provides a Helm-based solution for automating the deployment and
-management of AWS cloud resources, including S3 buckets and RDS instances.
-Built on top of Crossplane, it offers a Kubernetes-native way to provision,
-configure, and manage cloud infrastructure as code.
+This project demonstrates how to provision and manage cloud resources like S3 buckets and RDS databases using Kubernetes with Crossplane. It's packaged as a Replicated application, allowing easy distribution to customers through the Replicated platform with options for:
 
-The application can be installed via the Replicated platform for enterprise
-distribution and includes embedded cluster capabilities for simplified
-deployment.
+- Embedded Cluster deployment (Kubernetes-in-a-box)
+- Existing Kubernetes cluster installation
+- Air-gapped environments support
 
-### Key Features:
-- 🪣 S3 bucket provisioning and configuration
-- 🛢️ RDS database instance provisioning
-- 🔐 Secure credential management
-- 📊 Preflight checks and support bundle generation
-- 🚢 Seamless installation via Replicated platform
+The solution uses Helm charts to deploy and configure Crossplane providers and resources, with a straightforward UI for configuring AWS credentials and resource parameters.
 
 ## 🚀 How to Use
 
 ### Prerequisites
 
-- Kubernetes cluster (v1.26+)
-- Helm v3+
+- Kubernetes cluster 1.26+ (or none if using Embedded Cluster)
+- Replicated license (see "Getting a License" below)
 - AWS account with appropriate permissions
-- Crossplane installed in your cluster
 
 ### Installation Options
 
-#### 1. Direct Helm Installation
-
+#### Option 1: Embedded Cluster
 ```bash
-# Install cloud providers chart first
-helm install cloud-providers ./charts/cloud-providers \
-  --set providers.registry=xpkg.crossplane.io \
-  --set providers.aws.version=v1.21.1
-
-# Then install cloud resources chart
-helm install cloud-resources ./charts/cloud-resources \
-  --set aws.region=us-west-2 \
-  --set provider.aws.credentials="[default]\naws_access_key_id=YOUR_ACCESS_KEY\naws_secret_access_key=YOUR_SECRET_KEY" \
-  --set s3.enabled=true \
-  --set s3.bucketName=my-example-bucket
+curl -sSL https://k8s.kurl.sh/cloud-resources | sudo bash
 ```
 
-#### 2. Via Replicated Platform
-
-1. Access the Replicated Admin Console
-2. Follow the installation wizard
-3. Configure your AWS credentials and region
-4. Complete the installation
-
-### Configuration Options
-
-The application can be configured with the following options:
-
-**AWS Provider Configuration:**
-```yaml
-provider:
-  aws:
-    credentials: "" # AWS credentials in standard format
+#### Option 2: Existing Kubernetes Cluster
+```bash
+curl -sSL https://kots.io/install | bash
+kubectl kots install cloud-resources
 ```
 
-**AWS Region:**
-```yaml
-aws:
-  region: us-west-2
-```
+### Trying the Application
 
-**S3 Bucket Configuration:**
-```yaml
-s3:
-  enabled: true
-  bucketName: "my-example-bucket"
-  versioning: false
-  encryption: true
-  policy: "" # Optional custom policy
-```
+You can give this a try in one of two ways:
 
-**RDS Configuration:**
-```yaml
-rds:
-  enabled: true
-  instanceName: "my-database"
-  instanceClass: "db.t3.micro"
-  masterUsername: "postgres"
-  masterUserPassword: "your-secure-password"
-  allocatedStorage: 20
-  engine: "postgres"
-  engineVersion: "17.3"
-  publiclyAccessible: false
-```
+1. **Distribute your own version**: Clone this repo and use the Replicated platform to distribute it yourself
+2. **Request a demo license**: File a GitHub issue on this repository to request a trial license
+
+### Configuration
+
+During installation, you'll be prompted to provide:
+
+- AWS credentials (access key ID and secret access key)
+- AWS region
+- S3 bucket and RDS configuration options
 
 ## 🔧 Technical Information
 
@@ -101,41 +54,58 @@ rds:
 
 The solution consists of two main Helm charts:
 
-1. **cloud-providers**: Installs and configures Crossplane AWS providers (S3 and RDS)
-2. **cloud-resources**: Creates and manages the actual cloud resources using Crossplane CRDs
+1. **cloud-providers**: Installs and configures Crossplane AWS providers
+   - AWS S3 Provider
+   - AWS RDS Provider
 
-### Components
+2. **cloud-resources**: Creates and manages the actual cloud resources
+   - S3 buckets with configurable versioning and encryption
+   - RDS instances with configurable parameters
 
-- **Crossplane**: Provides the underlying infrastructure for cloud resource management
-- **AWS Providers**: Specific providers for S3 and RDS services
-- **Troubleshoot**: Includes preflight checks and support bundle generation
-- **Replicated Integration**: For enterprise distribution and embedded cluster support
+### Key Components
+
+- **Crossplane**: Core infrastructure for managing cloud resources from Kubernetes
+- **Troubleshoot**: Built-in diagnostics for easier support
+- **KOTS Admin Console**: Web UI for application management when installed on existing clusters
+- **Embedded Cluster**: Self-contained Kubernetes distribution for standalone deployments
+
+### Directory Structure
+
+```
+/charts               # Helm charts for the application
+  /cloud-providers    # Crossplane providers chart
+  /cloud-resources    # Resources management chart
+/replicated           # Replicated platform configuration
+  *.yaml              # Application definition, config, etc.
+```
 
 ### Development
 
-Local development requires:
-- Helm
-- Replicated CLI
-- AWS credentials for testing
+To contribute or modify this project:
 
+1. Clone the repository
 ```bash
-# Run linting
-make lint
-
-# Package charts
-make charts
-
-# Create a release
-make release
+git clone https://github.com/harperreed/cloud-resources-demo.git
+cd cloud-resources-demo
 ```
 
-### Continuous Integration
+2. Install development dependencies
+```bash
+brew bundle install  # Installs required tools via Homebrew
+```
 
-The project includes GitHub Actions and GitLab CI pipelines for automated releases to the Replicated platform.
+3. Make changes to the charts or configuration
 
-## 🔗 Additional Resources
+4. Build and test
+```bash
+make lint           # Lint the configuration
+make charts         # Package the Helm charts
+make release        # Create a release (requires Replicated API token)
+```
 
-- [Crossplane Documentation](https://crossplane.io/docs/)
-- [AWS Provider Documentation](https://doc.crds.dev/github.com/crossplane/provider-aws)
-- [Replicated Documentation](https://docs.replicated.com/)
-- [Troubleshoot Documentation](https://troubleshoot.sh/)
+## 🤝 Support
+
+If you encounter any issues or have questions, please:
+- Check the support bundle by running `kubectl support-bundle --load-cluster-specs`
+- File an issue on the GitHub repository
+
