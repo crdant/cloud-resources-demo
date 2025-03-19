@@ -1,22 +1,40 @@
 {{- if .Values.s3.enabled }}
-apiVersion: s3.aws.upbound.io/v1beta1
+apiVersion: s3.aws.upbound.io/v1beta2
 kind: Bucket
 metadata:
   name: {{ .Values.s3.bucketName }}
+  labels: {{ include "cloud-resources.labels" . | nindent 4 }}
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
-    acl: private
-    locationConstraint: {{ .Values.aws.region }}
     {{- if .Values.s3.versioning }}
     versioning: true
     {{- end }}
     {{- if .Values.s3.encryption }}
     serverSideEncryptionConfiguration:
-      rules:
-        - applyServerSideEncryptionByDefault:
-            sseAlgorithm: AES256
+      rule:
+        applyServerSideEncryptionByDefault:
+          sseAlgorithm: AES256
+    {{- end }}
+    {{- if .Values.s3.policy }}
+    policy: |
+      {{- tpl .Values.s3.policy . | nindent 6 }}
     {{- end }}
   providerConfigRef:
     name: {{ .Release.Name }}-aws-provider
+---
+{{- if .Values.s3.encryption }}
+apiVersion: s3.aws.upbound.io/v1beta2
+kind: BucketServerSideEncryptionConfiguration
+metadata:
+  name: {{ .Values.s3.bucketName }}
+spec:
+  forProvider:
+    bucketSelector:
+      matchLabels: {{ include "cloud-resources.selectorLabels" . | nindent 8 }}
+    region: {{ .Values.aws.region }}
+    rule:
+      - applyServerSideEncryptionByDefault:
+          sseAlgorithm: AES256
+{{- end }}
 {{- end }}

@@ -3,7 +3,7 @@ PROJECTDIR := $(shell pwd)
 CHARTDIR    := $(PROJECTDIR)/charts
 CHARTS      := $(shell find $(CHARTDIR) -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
 
-MANIFESTDIR := $(PROJECTDIR)/kots
+MANIFESTDIR := $(PROJECTDIR)/replicated
 MANIFESTS   := $(shell find $(MANIFESTDIR) -name '*.yaml' -o -name '*.yml')
 
 VERSION     ?= $(shell yq .version $(CHARTDIR)/cloud-resources/Chart.yaml)
@@ -25,7 +25,7 @@ $(foreach element,$(MANIFESTS),$(eval $(call make-manifest-target,$(element))))
 
 define make-chart-target
 $(eval VER := $(shell yq .version $(CHARTDIR)/$1/Chart.yaml))
-$(BUILDDIR)/$1-$(VER).tgz : $(shell find $(CHARTDIR)/$1 -name '*.yaml' -o -name '*.yml') | $$(BUILDDIR)
+$(BUILDDIR)/$1-$(VER).tgz : $(shell find $(CHARTDIR)/$1 -name '*.yaml' -o -name '*.yml' -o -name "*.tpl" -o -name "NOTES.txt" -o -name "values.schema.json") | $$(BUILDDIR)
 	helm package -u $(CHARTDIR)/$1 -d $(BUILDDIR)/
 RELEASE_FILES := $(RELEASE_FILES) $(BUILDDIR)/$1-$(VER).tgz
 charts:: $(BUILDDIR)/$1-$(VER).tgz

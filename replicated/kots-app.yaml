@@ -1,0 +1,11 @@
+---
+apiVersion: kots.io/v1beta1
+kind: Application
+metadata:
+  name: cloud-resources
+spec:
+  title: Cloud Resources Demo
+  icon: https://storage.cloud.google.com/demo-icons/cloud-resources-demo-icon.png
+  statusInformers: []
+  additionalNamespaces:
+    - crossplane-system

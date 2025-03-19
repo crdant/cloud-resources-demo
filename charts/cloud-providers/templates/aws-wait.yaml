@@ -1,0 +1,63 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "cloud-providers.fullname" . }}-wait-for-provider-aws
+  labels: {{ include "cloud-providers.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "5"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      serviceAccountName: {{ .Values.providers.aws.waitJob.serviceAccountName | default .Values.providers.serviceAccountName }}
+      containers:
+        - name: {{ include "cloud-providers.fullname" . }}-wait-for-provider-aws
+          image: bitnami/kubectl:latest
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Waiting for AWS providers to be Healthy..."
+              attempt=0
+              delay=5
+              max_delay=60
+              max_attempts=10
+              
+              while [ $attempt -lt $max_attempts ]; do
+                s3_status=$(kubectl get providers.pkg.crossplane.io {{ include "cloud-providers.fullname" . }}-aws-s3 -o=jsonpath='{.status.conditions[?(@.type=="Healthy")].status}')
+                rds_status=$(kubectl get providers.pkg.crossplane.io {{ include "cloud-providers.fullname" . }}-aws-rds -o=jsonpath='{.status.conditions[?(@.type=="Healthy")].status}')
+                
+                echo "❓ Provider '{{ include "cloud-providers.fullname" . }}-aws-s3' is $s3_status"
+                echo "❓ Provider '{{ include "cloud-providers.fullname" . }}-aws-rds' is $rds_status"
+                
+                if [ "$s3_status" = "True" ] && [ "$rds_status" = "True" ]; then
+                  echo "✅ Both AWS providers are Healthy"
+                  
+                  echo "Waiting for S3 CRDs to be established..."
+                  kubectl wait --for=condition=Established crds/buckets.s3.aws.crossplane.io --timeout=60s
+                  echo "✅ S3 Bucket CRD is Established"
+                  
+                  echo "Waiting for RDS CRDs to be established..."
+                  kubectl wait --for=condition=Established crds/dbinstances.rds.aws.crossplane.io --timeout=60s
+                  echo "✅ RDS DBInstance CRD is Established"
+                  
+                  echo "✅ All required CRDs are Established"
+                  exit 0
+                fi
+                
+                attempt=$((attempt+1))
+                echo "⏳ Attempt $attempt: Not all providers are Healthy yet. Retrying in $delay seconds..."
+                
+                sleep $delay
+                
+                # Exponential backoff: Double the delay, but cap at max_delay
+                delay=$((delay * 2))
+                if [ $delay -gt $max_delay ]; then
+                  delay=$max_delay
+                fi
+              done
+              
+              echo "❌ AWS providers did not reach Healthy state after $max_attempts attempts."
+              exit 1

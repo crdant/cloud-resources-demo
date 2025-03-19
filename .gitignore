@@ -2,7 +2,7 @@
 build
 
 # Replicated
-kots/*.tgz
+replicated/*.tgz
 
 # Kubernetes
 *.kubeconfig
@@ -25,7 +25,6 @@ Chart.lock
 values.local.yaml
 
 # Secrets
-*secret*
 *.pem
 *.key
 .env
@@ -45,5 +44,9 @@ Thumbs.db
 *.tmp
 *.swp
 *~
+
+# secrets and work files
+secrets/*
+work/*
 
 .aider*

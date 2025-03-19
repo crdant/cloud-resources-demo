@@ -1,11 +1,15 @@
 apiVersion: aws.upbound.io/v1beta1
 kind: ProviderConfig
 metadata:
-  name: {{ .Release.Name }}-aws-provider
+  name: {{ include "cloud-resources.fullname" . }}-aws-provider
+  labels: {{ include "cloud-resources.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "5"
 spec:
   credentials:
     source: Secret
     secretRef:
       namespace: {{ .Release.Namespace }}
-      name: aws-creds
+      name: {{ include "cloud-resources.fullname" . }}-aws-creds
       key: credentials

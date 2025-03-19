@@ -1,0 +1,21 @@
+# Default values for cloud-providers
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+nameOverride: ""
+fullnameOverride: ""
+
+# AWS Provider Configuration
+providers:
+  registry: "xpkg.crossplane.io"
+  pullPolicy: ""
+  packagePullSecrets: []
+  serviceAccountName: ""
+
+  aws:
+    version: "v1.21.1"
+    packages:
+      s3: "crossplane-contrib/provider-aws-s3"
+      rds: "crossplane-contrib/provider-aws-rds"
+    waitJob:
+      serviceAccountName: ""

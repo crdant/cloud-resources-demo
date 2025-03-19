@@ -6,12 +6,24 @@ metadata:
 spec:
   collectors: {{- include "troubleshoot.collectors.shared" .  | nindent 4 }}
     - logs:
-        name: app/{{ include "cloud-resources.name" . }}/logs
+        name: app/{{ include "cloud-resources.name" . }}/provider-family-aws/logs
+        namespace: crossplane-system
         selector: 
-          {{- $labels := (include "cloud-resources.selectorLabels" . | fromYaml ) }}
-          {{- range ( $labels | keys ) }}
-          - {{ print . "=" (get $labels .) }}
-          {{- end }}
+          pkg.crossplane.io/provider=provider-family-aws
+        limits:
+          maxAge: 720h
+    - logs:
+        name: app/{{ include "cloud-resources.name" . }}/provider-aws-s3/logs
+        namespace: crossplane-system
+        selector: 
+          pkg.crossplane.io/provider=provider-aws-rds
+        limits:
+          maxAge: 720h
+    - logs:
+        name: app/{{ include "cloud-resources.name" . }}/provider-aws-rds/logs
+        namespace: crossplane-system
+        selector: 
+          pkg.crossplane.io/provider=provider-aws-rds
         limits:
           maxAge: 720h
   analyzers: {{- include "troubleshoot.analyzers.shared" .  | nindent 4 }}

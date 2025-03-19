@@ -1,0 +1,30 @@
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: {{ include "cloud-providers.fullname" . }}-aws-s3
+  labels: {{ include "cloud-providers.labels" . | nindent 4 }}
+spec:
+  package: {{ .Values.providers.registry }}/{{ .Values.providers.aws.packages.s3 }}:{{ .Values.providers.aws.version }}
+  {{- with .Values.providers.packagePullSecrets }}
+  packagePullSecrets:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- if and .Values.providers.pullPolicy (ne .Values.providers.pullPolicy "") }}
+  packagePullPolicy: {{ .Values.providers.pullPolicy }}
+  {{- end }}
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: {{ include "cloud-providers.fullname" . }}-aws-rds
+  labels: {{ include "cloud-providers.labels" . | nindent 4 }}
+spec:
+  package: {{ .Values.providers.registry }}/{{ .Values.providers.aws.packages.rds }}:{{ .Values.providers.aws.version }}
+  {{- with .Values.providers.packagePullSecrets }}
+  packagePullSecrets:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- if and .Values.providers.pullPolicy (ne .Values.providers.pullPolicy "") }}
+  packagePullPolicy: {{ .Values.providers.pullPolicy }}
+  {{- end }}
